@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<style type="text/css">
+.artist {
+	display: inline-block;
+	padding: 0px 5px;
+}
+</style>
+<body>
+<h1><span>SPOTIFY</span> ARTIST SEARCH</h1>
+<div class="search-wrap">
+	<input type="text" class="search" type="artist" placeholder="look for an artist">
+	<button>search</button>
+</div>
+
+<p>disclaimer: spotify desktop application must be open for this to work<br/>
+also, works best with firefox.</p>
+
+<div class="results"></div>
+
+
+<script type="text/javascript">
+const searchButton = document.querySelector('button');
+const results = document.querySelector('.results');
+let spotifyData = [];
+let html = "";
+
+function populateData(input) {
+	spotifyData = [];
+	html = "";
+	const searchTerm = document.querySelector('.search').value;
+	const endpoint = `https://api.spotify.com/v1/search?q=${searchTerm}&type=artist`;
+	
+
+	fetch(endpoint)
+		.then(blob => blob.json())
+		.then(data => spotifyData.push(...data.artists.items)
+		.then(spotifyData.map(function(artist) {
+					console.log(artist.name);
+					console.log(artist.uri);
+					console.log(spotifyData);
+				    html += `
+				    	<div class="artist">
+					    	<div class="name"> ${artist.name} </div>
+					    	<iframe src="https://embed.spotify.com/?uri=${artist.uri}" width="250" height="330" frameborder="0" allowtransparency="true"></iframe>
+				    	</div>
+				    `;
+				    results.innerHTML = html;
+
+				    document.querySelector('.search').value = '';
+				})
+
+		));
+
+
+
+}
+searchButton.addEventListener('click', populateData);
+
+
+</script>
+</body>
+</html>
